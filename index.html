@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-spam-filter-ML" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/15/spam-filter-ML/" class="article-date">
+  <time datetime="2020-06-15T12:32:09.000Z" itemprop="datePublished">2020-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/15/spam-filter-ML/">spam_filter_ML</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p><a href="#1">1实验目的及文本处理 </a></p>
+<ul>
+<li><p><a href="#1.0">1.0实验目的 </a></p>
+</li>
+<li><p><a href="#1.1">1.1文本特征提取：建立词袋 </a> </p>
+</li>
+</ul>
+</li>
+<li><p><a href="#2">2朴素贝叶斯</a></p>
+</li>
+<li><p><a href="#3">3支持向量机</a></p>
+</li>
+<li><p><a href="#4">4 N元语法模型</a></p>
+</li>
+<li><p><a href="#2333">参考文献 </a></p>
+</li>
+</ul>
+<h1 id="1">
+    1实验目的及文本处理
+</h1>
+
+
+<h2 id="1.0">1.0实验目的</h2>
+
+<p>通过机器学习算法训练模型“垃圾邮件分类器”，实现输入邮件文本，输出邮件分类（垃圾邮件/非垃圾邮件）。</p>
+<h2 id="1.1">
+    1.1文本特征提取：建立词袋（bag of words）
+</h2>
+
+
+<h3 id="文本预处理："><a href="#文本预处理：" class="headerlink" title="文本预处理："></a>文本预处理：</h3><p>删除频繁出现的无实意词汇：the/and/of…</p>
+<p>词形还原：stops/stopped/stopping-&gt;stop</p>
+<p>若为中文文本，采用jieba分词工具</p>
+<p>对过长的邮件内容进行截取，比如只取前3000个字符。</p>
+<h3 id="建立词典及特征提取"><a href="#建立词典及特征提取" class="headerlink" title="建立词典及特征提取"></a>建立词典及特征提取</h3><p>建立词频向量。行表示文件，列表示词语，矩阵中第i行第j列的值表示第i个文件中单词j出现的次数。对每一个出现的词，如果不曾被纳入词典，就加入词典，并计数1，如果已存在，就给该项加一。</p>
+<h1 id="2">
+    2朴素贝叶斯(Naive Bayes)
+</h1>
+
+
+<h2 id="2-0-算法原理"><a href="#2-0-算法原理" class="headerlink" title="2.0 算法原理"></a>2.0 算法原理</h2><p>根据条件概率的贝叶斯公式，有：</p>
+<p>$$<br>P\left( y \middle| x_{1},\ldots,x_{n} \right) = \frac{P\left( y \right)P\left( x_{1},\ldots,x_{n} \middle| y \right)}{P\left( x_{1},\ldots,x_{n} \right)}<br>$$</p>
+<p>根据朴素贝叶斯的独立性假设，有：</p>
+<p>$$<br>P\left( x_{i} \middle| y,x_{1},\ldots,x_{i - 1},x_{i + 1},\ldots,x_{n} \right) = P\left( x_{i} \middle| y \right)<br>$$</p>
+<p>综合上述两式，得到：</p>
+<p>$$<br>P\left( y \middle| x_{1},\ldots,x_{n} \right) = \frac{P\left( y \right)\Pi_{i = 1}^{n}P\left( x_{i} \middle| y \right)}{P\left( x_{1},\ldots,x_{n} \right)}<br>$$</p>
+<p>由于$$P\left( x_{1},\ldots,x_{n} \right)$$是一个固定的常值，分类器判断出的类别：</p>
+<p>$$<br>y = argmaxP\left( y \right)\Pi_{i = 1}^{n}P\left( x_{i} \middle| y \right)<br>$$</p>
+<h2 id="2-1-算法描述"><a href="#2-1-算法描述" class="headerlink" title="2.1 算法描述"></a>2.1 算法描述</h2><ol>
+<li><p>数据准备：收集数据（此处指收集若干篇垃圾邮件和正常邮件的文本文件），下载用于学习的数据集。数据集中每一行代表一封邮件。以spam开头代表是垃圾邮件，以ham开头代表是正常邮件。</p>
+</li>
+<li><p>数据处理（处理数据/清洗数据）：将正常邮件和垃圾邮件的文本文件解析成词条向量。</p>
+</li>
+<li><p>分析数据：检查词条确保解析的正确性。</p>
+</li>
+<li><p>训练算法：计算不同的独立特征的条件概率，即</p>
+</li>
+</ol>
+<p>首先计算先验概率，即通过遍历统计每个单词在整个训练集中出现的总次数，算出总频率，再分别统计这个单词在正常邮件、垃圾邮件中出现的频率。</p>
+<p>利用朴素贝叶斯的统计学原理的计算公式计算P(wi|c0),<br>P(wi|c1),其中c0代表正常邮件，c1代表垃圾邮件</p>
+<ol>
+<li><p>测试模型：用测试数据集评估模型预测的正确率，若正确率太低，检查思路，程序，观察并解决出现的问题。</p>
+</li>
+<li><p>应用算法：构建一个完整的程序对一组未知属性的文本文件进行分类，即对未知分类的一封邮件进行判断，判别其是否为垃圾邮件。</p>
+</li>
+</ol>
+<h2 id="2-2-算法分析"><a href="#2-2-算法分析" class="headerlink" title="2.2 算法分析"></a>2.2 算法分析</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>朴素贝叶斯算法作为一种很传统的机器学习算法，计算速度较快，分类效果较好。下面对朴素贝叶斯算法的优越性进行分析。</p>
+<p>首先，现实分类处理的对象常常很切合朴素贝叶斯算法的假设，即针对特定的分类，其各个特征是相互独立的。对于本课题而言，即是垃圾邮件中各个词汇之间相互独立，关联性不强，不会影响彼此的概率分布。</p>
+<p>第二，当各个特征之间关联性很强时，有学者研究发现，朴素贝叶斯算法的准确率并没有降低。学者认为，这是归功于朴素贝叶斯算法的“0-1损失函数”的定义。不同于其它很多算法，朴素贝叶斯在训练模型时，并不将分类概率与实际概率的差距作为分类标准，而只惩罚那些分类错误的情况。比如实际上p(+|E)=0.9,<br>p(-|E)=0.1，通过朴素贝叶斯分类器判断出来p’(+|E)=0.6,<br>p’(-|E)=0.4，这时分类器与实际分类的概率相差较大，但分类结果没有出入，因此不对模型进行惩罚。</p>
+<h1 id="3">
+    3支持向量机(Support Vector Machines)
+</h1>
+
+
+<h2 id="3-0-算法原理"><a href="#3-0-算法原理" class="headerlink" title="3.0 算法原理"></a>3.0 算法原理</h2><h3 id="线性可分支持向量机"><a href="#线性可分支持向量机" class="headerlink" title="线性可分支持向量机"></a>线性可分支持向量机</h3><p>如果训练数据集是线性可分的，我们的目的就是在特征空间中找到一个分离超平面，将实例分为两类（+|-）。这样的分离超平面是有无穷多个的，而利用间隔最大化求最优分离超平面，得到的解是唯一的。算法导出过程如下：</p>
+<p>对于给定的训练数据集$$T = {\left( x_{1},y_{1} \right),\left( x_{2},y_{2}<br>\right),\ldots,\left( x_{N},y_{N} \right)},x_{i} \in R^{n},y_{i} \in { + 1. -<br>1},i = 1,2,\ldots N$$，确定超平面$$w \cdot x + b = 0$$,记为$$\left( w,b<br>\right)$$，定义超平面关于样本点$$\left( x_{i},y_{i} \right)$$的几何间隔为</p>
+<p>$$<br>\gamma_{i} = y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right)<br>$$</p>
+<p>其中$$y_{i}$$与后面一项乘积的正负可以体现分类的正确性，而绝对值的大小体现分类的确信度。定义训练集与超平面的几何间隔为</p>
+<p>$$<br>\gamma = min_{i = 1,\ldots,N}\gamma_{i}<br>$$</p>
+<p>我们需要求解最大间隔分离超平面，可以表示为如下的约束最优化问题：</p>
+<p>$$<br>\text{ma}x_{w,b}\text{\ \ γ}<br>$$</p>
+<p>$$<br>\text{s.t.}y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right) \geq \gamma,i = 1,2,\ldots,N<br>$$</p>
+<p>该问题等价于求解</p>
+<p>$$<br>\text{ma}x_{\text{w.b}}\frac{\gamma}{\left| \left| w \right| \right|}<br>$$</p>
+<p>$$<br>\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) \geq \gamma,i = 1,2,\ldots,N<br>$$</p>
+<p>取$$\gamma = 1$$，又注意到$$\max\frac{1}{\left| \left| w \right|<br>\right|}\min\frac{1}{2}\left| \left| w \right|<br>\right|^{2}$$（此处转化是由于后式便于求导，且导数含$$w$$便于计算），所求问题转化为</p>
+<p>$$<br>\text{mi}n_{w,b}\frac{1}{2}\left| \left| w \right| \right|^{2}<br>$$</p>
+<p>$$<br>\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) - 1 \geq 0,i = 1,2,\ldots,N<br>$$</p>
+<p>由此取得最优解$$w^{<em>},b^{</em>}$$，得到的分离超平面为</p>
+<p>$$<br>w^{<em>} \cdot x + b^{</em>} = 0<br>$$</p>
+<p>分类决策函数</p>
+<p>$$<br>f\left( x \right) = sign\left( w^{<em>} \cdot x + b^{</em>} \right)<br>$$</p>
+<p><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4122790217,405279139&fm=26&gp=0.jpg" alt="SVMs"></p>
+<h3 id="非线性分类"><a href="#非线性分类" class="headerlink" title="非线性分类"></a>非线性分类</h3><p>对于非线性分类问题，可以将其转化为高维空间里的线性分类问题，在线性支持向量机学习的对偶问题里，目标函数和分类决策函数都只涉及实例与实例之间的内积，可以用核函数<br>(kernel<br>function)来进行替换。比如我们需要把针对二维平面的点建立映射，核函数的定义为$$K\left(<br>x,y \right) = &lt; f\left( x \right),f\left( y \right) &gt;$$。一般计算$$&lt; f\left( x<br>\right),f\left( y \right) &gt;$$我们需要先计算出$$f\left( x \right),f\left( y<br>\right)$$，然后再计算点积，这将涉及到很大的计算量。而应用核函数，可以直接建立<br>$$x,y$$到$$&lt; f\left( x \right),f\left( y \right) &gt;$$的映射。</p>
+<p>例如：定义如下针对三维空间点的映射</p>
+<p>$$<br>x = \left( x_{1},x_{2},x_{3} \right),<br>$$</p>
+<p>$$<br>f\left( x \right) = (x_{1}x_{1},x_{1}x_{2},x_{1}x_{3},x_{2}x_{1},x_{2}x_{2},x_{2}x_{3},x_{3}x_{1},x_{3}x_{2},x_{3}x_{3})<br>$$</p>
+<p>用普通方法计算$$&lt; f\left( x \right),f\left( y \right) &gt;$$步骤为：</p>
+<p>$$<br>x = \left( x_{1},x_{2},x_{3} \right);y = \left( y_{1},y_{2},y_{3} \right);<br>$$</p>
+<p>$$<br>f\left( x \right) = (x_{1}x_{1},x_{1}x_{2},x_{1}x_{3},x_{2}x_{1},x_{2}x_{2},x_{2}x_{3},x_{3}x_{1},x_{3}x_{2},x_{3}x_{3})<br>$$</p>
+<p>$$<br>f\left( y \right) = \left( y_{1}y_{1},y_{1}y_{2},y_{1}y_{3},y_{2}y_{1},y_{2}y_{2},y_{2}y_{3},y_{3}y_{1},y_{3}y_{2},y_{3}y_{3} \right)<br>$$</p>
+<p>$$<br>&lt; f\left( x \right),f\left( y \right) &gt; = \left( x_{1}y_{1} \right)^{2} + \left( x_{2}y_{2} \right)^{2} + \left( x_{3}y_{3} \right)^{2} + 2\left( x_{1}x_{2}y_{1}y_{2} + x_{1}x_{3}y_{1}y_{3} + x_{2}x_{3}y_{2}y_{3} \right)<br>$$</p>
+<p>而通过核函数，我们能够发现：</p>
+<p>$$<br>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  &lt; f\left( x \right),f\left( y \right) &gt;<br>$$</p>
+<p>$$<br>= \left( x_{1}y_{1} + x_{2}y_{2} + x_{3}y_{3} \right)^{2} = \left( &lt; x,y &gt; \right)^{2}<br>$$</p>
+<p>这样就避免了多维的复杂计算，降低了算法复杂度。</p>
+<h2 id="3-1-算法描述"><a href="#3-1-算法描述" class="headerlink" title="3.1 算法描述"></a>3.1 算法描述</h2><h2 id="3-2-算法分析及优化"><a href="#3-2-算法分析及优化" class="headerlink" title="3.2 算法分析及优化"></a>3.2 算法分析及优化</h2><p>线性支持向量机在对一个新的实例进行分类时时间复杂度为$$O\left( s<br>\right)$$，其中s为非零特征的数量，这个时间复杂度与其它线性分类器是相同的，比如上一个方法朴素贝叶斯。但是训练出一个SVM的时间复杂度为$$O\left(<br>n^{2} \right)$$，其中n为训练案例数量。</p>
+<h3 id="Online-SVM"><a href="#Online-SVM" class="headerlink" title="Online SVM:"></a>Online SVM:</h3><p>在传统的方式中，支持向量机通常采取批处理模式，这是指学习一批固定的训练数据集，然后应用在独立的案例中。而针对邮件分类这种增长式的数据，我们需要对把传统的批处理模式升级为线上处理模式(Online<br>SVM)，因为邮件是源源不断的，也是需要不断优化的。我们需要让模型在接收每一个案例之后，都会被告知分类正确与否，并对旧的SVM做出调整和更新。</p>
+<h3 id="Relaxed-Online-SVM-ROSVM"><a href="#Relaxed-Online-SVM-ROSVM" class="headerlink" title="Relaxed Online SVM(ROSVM)"></a>Relaxed Online SVM(ROSVM)</h3><p>在训练SVM时，我们需要满足如下条件：</p>
+<p>要使下面的函数最小:</p>
+<p>$$<br>\tau\left( w,\varepsilon \right) = \frac{1}{2}\left| \left| w \right| \right|^{2} + C\sum_{i = 1}^{n}\varepsilon_{i}<br>$$</p>
+<p>同时满足限制</p>
+<p>$$<br>for\ all\ i = 1..n:y_{i}\left( &lt; w,x_{i} &gt; + b \right) \geq 1 - \varepsilon_{i},\varepsilon_{i} \geq 0<br>$$</p>
+<p>其中$$\varepsilon_{i}$$表示的是对于特定的例子$$x_{i}$$分类器分类错误的数量。使得$$\sum_{i<br>= 1}^{n}\varepsilon_{i}$$最小等价于使得损失函数最小，而使得$$\left| \left| w<br>\right|<br>\right|^{2}$$最小意味着使得两类的距离最大。这两种最优解的寻找通常是冲突的，其中C(<br>tradeoff<br>parameter)就反映了对这两种查找的重要性的分配。通过实验，学者发现把C设置为较高的值会得到更高的准确性。把C设置为较高的值意味着达到训练损失最小比实现最大距离要更重要。这就提醒我们，训练过程中注重找到对于所有数据实现最大距离是不必要的，我们就需要对这个需求放宽标准(relax)。有这样几种方式实现放宽标准：</p>
+<ol>
+<li>对于该寻找最优问题，将范围限制在最近的p个实例中，而非所有实例。</li>
+<li>通过只对错误作出反应，减少对模型更新的次数。</li>
+<li>通过允许用近似解取代最优解，减少迭代的次数。</li>
+</ol>
+<h1 id="4">
+    4 N元语法模型(n-gram language model)
+</h1>
+
+
+<h2 id="4-0-引入"><a href="#4-0-引入" class="headerlink" title="4.0 引入"></a>4.0 引入</h2><p>由于现在的垃圾邮件有的会为了躲避词频或特定词的侦查，会选择插入一些特殊符号将词汇变形，而仍然让人能看懂，比如”free”-&gt;”f*r*e*e”。这种伎俩有时候能欺骗分词工具，使我们提取不到有效词汇。而且对于语法丰富的自然语言，尤其是词形多变的语种，很少有分词工具能够完全将其拆分的。同时，建立词袋只统计词频，而忽视了词出现的顺序，这样会丢失部分信息。</p>
+<h2 id="4-1-算法原理"><a href="#4-1-算法原理" class="headerlink" title="4.1 算法原理"></a>4.1 算法原理</h2><p>如果我们想要计算$$P\left( w \middle| h<br>\right)$$，其中w为一个词，h为在它之前的历史文本。那么我们需要一个很大的语料库（比如网络）来统计。比如计算$$P\left(<br>土豆|我们都爱吃 \right) = \frac{C\left(我们都爱吃土豆<br>\right)}{C(我们都爱吃)}$$其中C表示（count）次数。但是这种方法从复杂性上、实用性上都不够现实，因此我们需要选择更聪明的方法。</p>
+<p>通过链式法则，我们可以将上述概率分解为</p>
+<p>$$<br>P\left( 我们都爱吃土豆\right) = P\left( 我们\right)P\left( 都\middle| 我们\right)P\left( 爱\middle| 我们都\right)P\left(吃 \middle|我们都爱 \right)P\left(土豆 \middle|我们都爱吃 \right)<br>$$</p>
+<p>定义记号$$w_{a}^{b}$$表示由a到b这b-a+1个词组成的序列，则链式法则用字母表示为</p>
+<p>$$<br>P\left( w_{1}^{n} \right) = P\left( w_{1} \right)P\left( w_{2} \middle| w_{1} \right)P\left( w_{3} \middle| w_{1}^{2} \right)\ldots P\left( w_{n} \middle| w_{1}^{n - 1} \right)<br>$$</p>
+<p>$$<br>= \Pi_{k = 1}^{n}P\left( w_{k} \middle| w_{1}^{k - 1} \right)<br>$$</p>
+<p>N-gram模型的逻辑在于，我们可以用最后几个单词来估计历史h，而不需要查看整个历史中的概率。方程为</p>
+<p>$$<br>P\left( w_{n} \middle| w_{1}^{n - 1} \right) \approx P\left( w_{n} \middle| w_{n - N + 1}^{n - 1} \right)<br>$$</p>
+<p>如果引入马尔科夫假设，即单词的概率只取决于前一个词，那么N-gram特定为bigram(N=2)。可以将联合概率写作</p>
+<p>$$<br>P\left( w_{1}^{n} \right) = \prod_{k = 1}^{n}{P\left( w_{k} \middle| w_{k - 1} \right)}<br>$$</p>
+<h2 id="4-2-实现思路"><a href="#4-2-实现思路" class="headerlink" title="4.2 实现思路"></a>4.2 实现思路</h2><p>采用训练集，分别训练出两个分类spam/ham的模型。对于新的测试邮件，分别通过两个模型得到的概率去预测它，看哪个模型预测得更接近，就将其归为哪一类。此过程可以衍生出很多方法，比如分词方式有词组、字符等，判断方式也可以只依靠邮件的前几个词。</p>
+<p>有人采用了字符为单位的学习方式。这表示对文本进行划分的单元不是单词，而是几个字符，比如将discount分为3个字母一组，这样就算被插入了一些扰乱的字符，比如di_scount，在这种分词模式下分成di_|sco|oun|t，与discount的大部分小模块还是相同的。</p>
+<h2 id="4-3算法分析"><a href="#4-3算法分析" class="headerlink" title="4.3算法分析"></a>4.3算法分析</h2><h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><p>包含了前N-1个词能提供的全部信息，并且原理简单容易实现。</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>首先，这种方法需要大量的训练数据来确定模型的参数。</p>
+<p>还有，因为数据稀疏会导致出现数据平滑问题。比如很多词汇组合的概率为0，这时就需要优化算法。</p>
+<h2 id="2333">
+    参考文献
+</h2>
+
+
+<ol>
+<li><p>Naïve Bayes: <a href="https://scikit-learn.org/stable/modules/naive_bayes.html" target="_blank" rel="noopener">https://scikit-learn.org/stable/modules/naive_bayes.html</a></p>
+</li>
+<li><p>SVM：《统计学习方法》，李航 著。</p>
+</li>
+<li><p>”Relaxed Online SVMs for Spam Filtering”:<br><a href="https://www.eecs.tufts.edu/~dsculley/papers/emailAndWebSpamSIGIR.pdf" target="_blank" rel="noopener">https://www.eecs.tufts.edu/~dsculley/papers/emailAndWebSpamSIGIR.pdf</a></p>
+</li>
+<li><p>n元语法模型：&lt;<a href="https://web.stanford.edu/~juraf" target="_blank" rel="noopener">https://web.stanford.edu/~juraf</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/15/spam-filter-ML/" data-id="ckbghg9f30001bktg7p803tds" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/15/hello-world/" class="article-date">
+  <time datetime="2020-06-15T12:30:14.333Z" itemprop="datePublished">2020-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/15/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/15/hello-world/" data-id="ckbghg9ez0000bktg8tts23q3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/15/spam-filter-ML/">spam_filter_ML</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/15/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
