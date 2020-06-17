@@ -294,6 +294,8 @@ y = argmaxP\left( y \right)\Pi_{i = 1}^{n}P\left( x_{i} \middle| y \right)</scri
 3.0 算法原理
 ------------
 
+
+
 ### 线性可分支持向量机
 
 如果训练数据集是线性可分的，我们的目的就是在特征空间中找到一个分离超平面，将实例分为两类（+\|-）。这样的分离超平面是有无穷多个的，而利用间隔最大化求最优分离超平面，得到的解是唯一的。算法导出过程如下：
@@ -361,6 +363,8 @@ $$
 
 
 
+
+
 ### 非线性分类
 
 对于非线性分类问题，可以将其转化为高维空间里的线性分类问题，在线性支持向量机学习的对偶问题里，目标函数和分类决策函数都只涉及实例与实例之间的内积，可以用核函数
@@ -369,7 +373,7 @@ function)来进行替换。比如我们需要把针对二维平面的点建立�
 x,y \right) = < f\left( x \right),f\left( y \right) >$$。一般计算$$< f\left( x
 \right),f\left( y \right) >$$我们需要先计算出$$f\left( x \right),f\left( y
 \right)$$，然后再计算点积，这将涉及到很大的计算量。而应用核函数，可以直接建立
-$$x,y\$$到$$< f\left( x \right),f\left( y \right) >$$的映射。
+$$x,y\$$ 到 $$< f\left( x \right),f\left( y \right) >$$ 的映射。
 
 例如：定义如下针对三维空间点的映射
 
@@ -411,15 +415,19 @@ $$
 
 这样就避免了多维的复杂计算，降低了算法复杂度。
 
+
+
 3.1 算法描述
 ------------
+
+
 
 3.2 算法分析及优化
 ------------------
 
-线性支持向量机在对一个新的实例进行分类时时间复杂度为$$O\left( s
-\right)$$，其中s为非零特征的数量，这个时间复杂度与其它线性分类器是相同的，比如上一个方法朴素贝叶斯。但是训练出一个SVM的时间复杂度为$$O\left(
-n^{2} \right)$$，其中n为训练案例数量。
+线性支持向量机在对一个新的实例进行分类时时间复杂度为 $$O\left( s
+\right)$$ ，其中s为非零特征的数量，这个时间复杂度与其它线性分类器是相同的，比如上一个方法朴素贝叶斯。但是训练出一个SVM的时间复杂度为 $$O\left(
+n^{2} \right)$$ ，其中n为训练案例数量。
 
 ### Online SVM:
 
@@ -442,16 +450,23 @@ $$
 for\ all\ i = 1..n:y_{i}\left( < w,x_{i} > + b \right) \geq 1 - \varepsilon_{i},\varepsilon_{i} \geq 0
 $$
 
-其中$$\varepsilon_{i}$$表示的是对于特定的例子$$x_{i}$$分类器分类错误的数量。使得$$\sum_{i
-= 1}^{n}\varepsilon_{i}$$最小等价于使得损失函数最小，而使得$$\left| \left| w
+其中 $$\varepsilon_{i}$$ 表示的是对于特定的例子$$x_{i}$$分类器分类错误的数量。使得 $$\sum_{i= 1}^{n}\varepsilon_{i}$$ 最小等价于使得损失函数最小，而使得$$\left| \left| w
 \right|
 \right|^{2}$$最小意味着使得两类的距离最大。这两种最优解的寻找通常是冲突的，其中C(
 tradeoff
 parameter)就反映了对这两种查找的重要性的分配。通过实验，学者发现把C设置为较高的值会得到更高的准确性。把C设置为较高的值意味着达到训练损失最小比实现最大距离要更重要。这就提醒我们，训练过程中注重找到对于所有数据实现最大距离是不必要的，我们就需要对这个需求放宽标准(relax)。有这样几种方式实现放宽标准：
 
-1.  对于该寻找最优问题，将范围限制在最近的p个实例中，而非所有实例。
-2.  通过只对错误作出反应，减少对模型更新的次数。
-3.  通过允许用近似解取代最优解，减少迭代的次数。
+
+
+1. 对于该寻找最优问题，将范围限制在最近的p个实例中，而非所有实例。
+
+
+
+2. 通过只对错误作出反应，减少对模型更新的次数。
+
+
+
+3. 通过允许用近似解取代最优解，减少迭代的次数。
 
 <h1 id="4">
     4N元语法模型(n-gram language model)
@@ -489,7 +504,7 @@ P\left( w_{1}^{n} \right) = \prod_{k = 1}^{n}{P\left( w_{k} \middle| w_{k - 1} \
 </li>
 <li><p>”Relaxed Online SVMs for Spam Filtering”:<br><a href="https://www.eecs.tufts.edu/~dsculley/papers/emailAndWebSpamSIGIR.pdf" target="_blank" rel="noopener">https://www.eecs.tufts.edu/~dsculley/papers/emailAndWebSpamSIGIR.pdf</a></p>
 </li>
-<li><p>n元语法模型：&lt;<a href="https://web.stanford.edu/~juraf" target="_blank" rel="noopener">https://web.stanford.edu/~juraf</a></p>
+<li><p>n元语法模型：<a href="https://web.stanford.edu/~juraf" target="_blank" rel="noopener">https://web.stanford.edu/~juraf</a></p>
 </li>
 </ol>
 
