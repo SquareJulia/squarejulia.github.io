@@ -185,7 +185,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      47
+      48
        分钟
     </span>
   
@@ -231,7 +231,7 @@
 </li>
 <li><p><a href="#3">3支持向量机</a></p>
 </li>
-<li><p><a href="#4">4 N元语法模型</a></p>
+<li><p><a href="#4">4N元语法模型</a></p>
 </li>
 <li><p><a href="#2333">参考文献 </a></p>
 </li>
@@ -291,56 +291,123 @@ y = argmaxP\left( y \right)\Pi_{i = 1}^{n}P\left( x_{i} \middle| y \right)</scri
 <h1 id="3">
     3支持向量机(Support Vector Machines)
 </h1>
+3.0 算法原理
+------------
 
+### 线性可分支持向量机
 
-<h2 id="3-0-算法原理"><a href="#3-0-算法原理" class="headerlink" title="3.0 算法原理"></a>3.0 算法原理</h2><h3 id="线性可分支持向量机"><a href="#线性可分支持向量机" class="headerlink" title="线性可分支持向量机"></a>线性可分支持向量机</h3><p>如果训练数据集是线性可分的，我们的目的就是在特征空间中找到一个分离超平面，将实例分为两类（+|-）。这样的分离超平面是有无穷多个的，而利用间隔最大化求最优分离超平面，得到的解是唯一的。算法导出过程如下：</p>
-<p>对于给定的训练数据集<script type="math/tex">T = \{\left( x_{1},y_{1} \right),\left( x_{2},y_{2}
+如果训练数据集是线性可分的，我们的目的就是在特征空间中找到一个分离超平面，将实例分为两类（+\|-）。这样的分离超平面是有无穷多个的，而利用间隔最大化求最优分离超平面，得到的解是唯一的。算法导出过程如下：
+
+对于给定的训练数据集$$T = \{\left( x_{1},y_{1} \right),\left( x_{2},y_{2}
 \right),\ldots,\left( x_{N},y_{N} \right)\},x_{i} \in R^{n},y_{i} \in \{ + 1. -
-1\},i = 1,2,\ldots N</script>，确定超平面<script type="math/tex">w \cdot x + b = 0</script>,记为<script type="math/tex">\left( w,b
-\right)</script>，定义超平面关于样本点<script type="math/tex">\left( x_{i},y_{i} \right)</script>的几何间隔为</p>
-<script type="math/tex; mode=display">
-\gamma_{i} = y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right)</script><p>其中<script type="math/tex">y_{i}</script>与后面一项乘积的正负可以体现分类的正确性，而绝对值的大小体现分类的确信度。定义训练集与超平面的几何间隔为</p>
-<script type="math/tex; mode=display">
-\gamma = min_{i = 1,\ldots,N}\gamma_{i}</script><p>我们需要求解最大间隔分离超平面，可以表示为如下的约束最优化问题：</p>
-<script type="math/tex; mode=display">
-\text{ma}x_{w,b}\text{\ \ γ}</script><script type="math/tex; mode=display">
-\text{s.t.}y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right) \geq \gamma,i = 1,2,\ldots,N</script><p>该问题等价于求解</p>
-<script type="math/tex; mode=display">
-\text{ma}x_{\text{w.b}}\frac{\gamma}{\left| \left| w \right| \right|}</script><script type="math/tex; mode=display">
-\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) \geq \gamma,i = 1,2,\ldots,N</script><p>取<script type="math/tex">\gamma = 1</script>，又注意到<script type="math/tex">\max\frac{1}{\left| \left| w \right|
+1\},i = 1,2,\ldots N$$，确定超平面$$w \cdot x + b = 0$$,记为$$\left( w,b
+\right)$$，定义超平面关于样本点$$\left( x_{i},y_{i} \right)$$的几何间隔为
+
+$$
+\gamma_{i} = y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right)
+$$
+
+其中$$y_{i}$$与后面一项乘积的正负可以体现分类的正确性，而绝对值的大小体现分类的确信度。定义训练集与超平面的几何间隔为
+
+$$
+\gamma = min_{i = 1,\ldots,N}\gamma_{i}
+$$
+
+我们需要求解最大间隔分离超平面，可以表示为如下的约束最优化问题：
+
+$$
+\text{ma}x_{w,b}\text{\ \ γ}
+$$
+
+$$
+\text{s.t.}y_{i}\left( \frac{w}{\left| \left| w \right| \right|} \cdot x_{i} + \frac{b}{\left| \left| w \right| \right|} \right) \geq \gamma,i = 1,2,\ldots,N
+$$
+
+该问题等价于求解
+
+$$
+\text{ma}x_{\text{w.b}}\frac{\gamma}{\left| \left| w \right| \right|}
+$$
+
+$$
+\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) \geq \gamma,i = 1,2,\ldots,N
+$$
+
+取$$\gamma = 1$$，又注意到$$\max\frac{1}{\left| \left| w \right|
 \right|}\min\frac{1}{2}\left| \left| w \right|
-\right|^{2}</script>（此处转化是由于后式便于求导，且导数含<script type="math/tex">w</script>便于计算），所求问题转化为</p>
-<script type="math/tex; mode=display">
-\text{mi}n_{w,b}\frac{1}{2}\left| \left| w \right| \right|^{2}</script><script type="math/tex; mode=display">
-\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) - 1 \geq 0,i = 1,2,\ldots,N</script><p>由此取得最优解<script type="math/tex">w^{*},b^{*}</script>，得到的分离超平面为</p>
-<script type="math/tex; mode=display">
-w^{*} \cdot x + b^{*} = 0</script><p>分类决策函数</p>
-<script type="math/tex; mode=display">
-f\left( x \right) = sign\left( w^{*} \cdot x + b^{*} \right)</script><p><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4122790217,405279139&amp;fm=26&amp;gp=0.jpg" srcset="/img/loading.gif" alt="SVMs"></p>
-<h3 id="非线性分类"><a href="#非线性分类" class="headerlink" title="非线性分类"></a>非线性分类</h3><p>对于非线性分类问题，可以将其转化为高维空间里的线性分类问题，在线性支持向量机学习的对偶问题里，目标函数和分类决策函数都只涉及实例与实例之间的内积，可以用核函数<br>(kernel<br>function)来进行替换。比如我们需要把针对二维平面的点建立映射，核函数的定义为<script type="math/tex">K\left(
-x,y \right) = < f\left( x \right),f\left( y \right) ></script>。一般计算<script type="math/tex">< f\left( x
-\right),f\left( y \right) ></script>我们需要先计算出<script type="math/tex">f\left( x \right),f\left( y
-\right)</script>，然后再计算点积，这将涉及到很大的计算量。而应用核函数，可以直接建立</p>
-<script type="math/tex; mode=display">x,y\$$到$$< f\left( x \right),f\left( y \right) >$$的映射。
+\right|^{2}$$（此处转化是由于后式便于求导，且导数含$$w$$便于计算），所求问题转化为
 
-例如：定义如下针对三维空间点的映射</script><p>x = \left( x<em>{1},x</em>{2},x_{3} \right),</p>
-<script type="math/tex; mode=display">
-</script><p>f\left( x \right) = (x<em>{1}x</em>{1},x<em>{1}x</em>{2},x<em>{1}x</em>{3},x<em>{2}x</em>{1},x<em>{2}x</em>{2},x<em>{2}x</em>{3},x<em>{3}x</em>{1},x<em>{3}x</em>{2},x<em>{3}x</em>{3})</p>
-<script type="math/tex; mode=display">
+$$
+\text{mi}n_{w,b}\frac{1}{2}\left| \left| w \right| \right|^{2}
+$$
 
-用普通方法计算$$< f\left( x \right),f\left( y \right) >$$步骤为：</script><p>x = \left( x<em>{1},x</em>{2},x<em>{3} \right);y = \left( y</em>{1},y<em>{2},y</em>{3} \right);</p>
-<script type="math/tex; mode=display">
-</script><p>f\left( x \right) = (x<em>{1}x</em>{1},x<em>{1}x</em>{2},x<em>{1}x</em>{3},x<em>{2}x</em>{1},x<em>{2}x</em>{2},x<em>{2}x</em>{3},x<em>{3}x</em>{1},x<em>{3}x</em>{2},x<em>{3}x</em>{3})</p>
-<script type="math/tex; mode=display">
-</script><p>f\left( y \right) = \left( y<em>{1}y</em>{1},y<em>{1}y</em>{2},y<em>{1}y</em>{3},y<em>{2}y</em>{1},y<em>{2}y</em>{2},y<em>{2}y</em>{3},y<em>{3}y</em>{1},y<em>{3}y</em>{2},y<em>{3}y</em>{3} \right)</p>
-<script type="math/tex; mode=display">
-</script><p>&lt; f\left( x \right),f\left( y \right) &gt; = \left( x<em>{1}y</em>{1} \right)^{2} + \left( x<em>{2}y</em>{2} \right)^{2} + \left( x<em>{3}y</em>{3} \right)^{2} + 2\left( x<em>{1}x</em>{2}y<em>{1}y</em>{2} + x<em>{1}x</em>{3}y<em>{1}y</em>{3} + x<em>{2}x</em>{3}y<em>{2}y</em>{3} \right)</p>
-<script type="math/tex; mode=display">
+$$
+\text{s.t.}y_{i}\left( w \cdot x_{i} + b \right) - 1 \geq 0,i = 1,2,\ldots,N
+$$
 
-而通过核函数，我们能够发现：</script><p>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  &lt; f\left( x \right),f\left( y \right) &gt;</p>
-<script type="math/tex; mode=display">
-</script><p>= \left( x<em>{1}y</em>{1} + x<em>{2}y</em>{2} + x<em>{3}y</em>{3} \right)^{2} = \left( &lt; x,y &gt; \right)^{2}</p>
-<script type="math/tex; mode=display">
+由此取得最优解$$w^{*},b^{*}$$，得到的分离超平面为
+
+$$
+w^{*} \cdot x + b^{*} = 0
+$$
+
+分类决策函数
+
+$$
+f\left( x \right) = sign\left( w^{*} \cdot x + b^{*} \right)
+$$
+
+![SVMs](https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4122790217,405279139&fm=26&gp=0.jpg)
+
+
+
+### 非线性分类
+
+对于非线性分类问题，可以将其转化为高维空间里的线性分类问题，在线性支持向量机学习的对偶问题里，目标函数和分类决策函数都只涉及实例与实例之间的内积，可以用核函数
+(kernel
+function)来进行替换。比如我们需要把针对二维平面的点建立映射，核函数的定义为$$K\left(
+x,y \right) = < f\left( x \right),f\left( y \right) >$$。一般计算$$< f\left( x
+\right),f\left( y \right) >$$我们需要先计算出$$f\left( x \right),f\left( y
+\right)$$，然后再计算点积，这将涉及到很大的计算量。而应用核函数，可以直接建立
+$$x,y\$$到$$< f\left( x \right),f\left( y \right) >$$的映射。
+
+例如：定义如下针对三维空间点的映射
+
+$$
+x = \left( x_{1},x_{2},x_{3} \right),
+$$
+
+$$
+f\left( x \right) = (x_{1}x_{1},x_{1}x_{2},x_{1}x_{3},x_{2}x_{1},x_{2}x_{2},x_{2}x_{3},x_{3}x_{1},x_{3}x_{2},x_{3}x_{3})
+$$
+
+用普通方法计算$$< f\left( x \right),f\left( y \right) >$$步骤为：
+
+$$
+x = \left( x_{1},x_{2},x_{3} \right);y = \left( y_{1},y_{2},y_{3} \right);
+$$
+
+$$
+f\left( x \right) = (x_{1}x_{1},x_{1}x_{2},x_{1}x_{3},x_{2}x_{1},x_{2}x_{2},x_{2}x_{3},x_{3}x_{1},x_{3}x_{2},x_{3}x_{3})
+$$
+
+$$
+f\left( y \right) = \left( y_{1}y_{1},y_{1}y_{2},y_{1}y_{3},y_{2}y_{1},y_{2}y_{2},y_{2}y_{3},y_{3}y_{1},y_{3}y_{2},y_{3}y_{3} \right)
+$$
+
+$$
+< f\left( x \right),f\left( y \right) > = \left( x_{1}y_{1} \right)^{2} + \left( x_{2}y_{2} \right)^{2} + \left( x_{3}y_{3} \right)^{2} + 2\left( x_{1}x_{2}y_{1}y_{2} + x_{1}x_{3}y_{1}y_{3} + x_{2}x_{3}y_{2}y_{3} \right)
+$$
+
+而通过核函数，我们能够发现：
+
+$$
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  < f\left( x \right),f\left( y \right) >
+$$
+
+$$
+= \left( x_{1}y_{1} + x_{2}y_{2} + x_{3}y_{3} \right)^{2} = \left( < x,y > \right)^{2}
+$$
 
 这样就避免了多维的复杂计算，降低了算法复杂度。
 
@@ -363,11 +430,17 @@ SVM)，因为邮件是源源不断的，也是需要不断优化的。我们需�
 
 在训练SVM时，我们需要满足如下条件：
 
-要使下面的函数最小:</script><p>\tau\left( w,\varepsilon \right) = \frac{1}{2}\left| \left| w \right| \right|^{2} + C\sum<em>{i = 1}^{n}\varepsilon</em>{i}</p>
-<script type="math/tex; mode=display">
+要使下面的函数最小:
 
-同时满足限制</script><p>for\ all\ i = 1..n:y<em>{i}\left( &lt; w,x</em>{i} &gt; + b \right) \geq 1 - \varepsilon<em>{i},\varepsilon</em>{i} \geq 0</p>
-<script type="math/tex; mode=display">
+$$
+\tau\left( w,\varepsilon \right) = \frac{1}{2}\left| \left| w \right| \right|^{2} + C\sum_{i = 1}^{n}\varepsilon_{i}
+$$
+
+同时满足限制
+
+$$
+for\ all\ i = 1..n:y_{i}\left( < w,x_{i} > + b \right) \geq 1 - \varepsilon_{i},\varepsilon_{i} \geq 0
+$$
 
 其中$$\varepsilon_{i}$$表示的是对于特定的例子$$x_{i}$$分类器分类错误的数量。使得$$\sum_{i
 = 1}^{n}\varepsilon_{i}$$最小等价于使得损失函数最小，而使得$$\left| \left| w
@@ -381,44 +454,32 @@ parameter)就反映了对这两种查找的重要性的分配。通过实验，�
 3.  通过允许用近似解取代最优解，减少迭代的次数。
 
 <h1 id="4">
-    4 N元语法模型(n-gram language model)
+    4N元语法模型(n-gram language model)
 </h1>
 
-
-4.0 引入
---------
-
-由于现在的垃圾邮件有的会为了躲避词频或特定词的侦查，会选择插入一些特殊符号将词汇变形，而仍然让人能看懂，比如”free”-\>”f\*r\*e\*e”。这种伎俩有时候能欺骗分词工具，使我们提取不到有效词汇。而且对于语法丰富的自然语言，尤其是词形多变的语种，很少有分词工具能够完全将其拆分的。同时，建立词袋只统计词频，而忽视了词出现的顺序，这样会丢失部分信息。
-
-4.1 算法原理
-------------
-
-如果我们想要计算$$P\left( w \middle| h
-\right)$$，其中w为一个词，h为在它之前的历史文本。那么我们需要一个很大的语料库（比如网络）来统计。比如计算$$P\left(
+<h2 id="4-0-引入"><a href="#4-0-引入" class="headerlink" title="4.0 引入"></a>4.0 引入</h2><p>由于现在的垃圾邮件有的会为了躲避词频或特定词的侦查，会选择插入一些特殊符号将词汇变形，而仍然让人能看懂，比如”free”->”f*r*e*e”。这种伎俩有时候能欺骗分词工具，使我们提取不到有效词汇。而且对于语法丰富的自然语言，尤其是词形多变的语种，很少有分词工具能够完全将其拆分的。同时，建立词袋只统计词频，而忽视了词出现的顺序，这样会丢失部分信息。</p>
+<h2 id="4-1-算法原理"><a href="#4-1-算法原理" class="headerlink" title="4.1 算法原理"></a>4.1 算法原理</h2><p>如果我们想要计算<script type="math/tex">P\left( w \middle| h
+\right)</script>，其中w为一个词，h为在它之前的历史文本。那么我们需要一个很大的语料库（比如网络）来统计。比如计算<script type="math/tex">P\left(
 土豆|我们都爱吃 \right) = \frac{C\left(我们都爱吃土豆
-\right)}{C(我们都爱吃)}$$其中C表示（count）次数。但是这种方法从复杂性上、实用性上都不够现实，因此我们需要选择更聪明的方法。
-
-通过链式法则，我们可以将上述概率分解为</script><p>P\left( 我们都爱吃土豆\right) = P\left( 我们\right)P\left( 都\middle| 我们\right)P\left( 爱\middle| 我们都\right)P\left(吃 \middle|我们都爱 \right)P\left(土豆 \middle|我们都爱吃 \right)</p>
+\right)}{C(我们都爱吃)}</script>其中C表示（count）次数。但是这种方法从复杂性上、实用性上都不够现实，因此我们需要选择更聪明的方法。</p>
+<p>通过链式法则，我们可以将上述概率分解为</p>
 <script type="math/tex; mode=display">
-
-定义记号$$w_{a}^{b}$$表示由a到b这b-a+1个词组成的序列，则链式法则用字母表示为</script><p>P\left( w<em>{1}^{n} \right) = P\left( w</em>{1} \right)P\left( w<em>{2} \middle| w</em>{1} \right)P\left( w<em>{3} \middle| w</em>{1}^{2} \right)\ldots P\left( w<em>{n} \middle| w</em>{1}^{n - 1} \right)</p>
+P\left( 我们都爱吃土豆\right) = P\left( 我们\right)P\left( 都\middle| 我们\right)P\left( 爱\middle| 我们都\right)P\left(吃 \middle|我们都爱 \right)P\left(土豆 \middle|我们都爱吃 \right)</script><p>定义记号<script type="math/tex">w_{a}^{b}</script>表示由a到b这b-a+1个词组成的序列，则链式法则用字母表示为</p>
 <script type="math/tex; mode=display">
-</script><p>= \Pi<em>{k = 1}^{n}P\left( w</em>{k} \middle| w_{1}^{k - 1} \right)</p>
+P\left( w_{1}^{n} \right) = P\left( w_{1} \right)P\left( w_{2} \middle| w_{1} \right)P\left( w_{3} \middle| w_{1}^{2} \right)\ldots P\left( w_{n} \middle| w_{1}^{n - 1} \right)</script><script type="math/tex; mode=display">
+= \Pi_{k = 1}^{n}P\left( w_{k} \middle| w_{1}^{k - 1} \right)</script><p>N-gram模型的逻辑在于，我们可以用最后几个单词来估计历史h，而不需要查看整个历史中的概率。方程为</p>
 <script type="math/tex; mode=display">
-
-N-gram模型的逻辑在于，我们可以用最后几个单词来估计历史h，而不需要查看整个历史中的概率。方程为</script><p>P\left( w<em>{n} \middle| w</em>{1}^{n - 1} \right) \approx P\left( w<em>{n} \middle| w</em>{n - N + 1}^{n - 1} \right)</p>
+P\left( w_{n} \middle| w_{1}^{n - 1} \right) \approx P\left( w_{n} \middle| w_{n - N + 1}^{n - 1} \right)</script><p>如果引入马尔科夫假设，即单词的概率只取决于前一个词，那么N-gram特定为bigram(N=2)。可以将联合概率写作</p>
 <script type="math/tex; mode=display">
-
-如果引入马尔科夫假设，即单词的概率只取决于前一个词，那么N-gram特定为bigram(N=2)。可以将联合概率写作</script><p>P\left( w<em>{1}^{n} \right) = \prod</em>{k = 1}^{n}{P\left( w<em>{k} \middle| w</em>{k - 1} \right)}</p>
-<p>$$</p>
-<h2 id="4-2-实现思路"><a href="#4-2-实现思路" class="headerlink" title="4.2 实现思路"></a>4.2 实现思路</h2><p>采用训练集，分别训练出两个分类spam/ham的模型。对于新的测试邮件，分别通过两个模型得到的概率去预测它，看哪个模型预测得更接近，就将其归为哪一类。此过程可以衍生出很多方法，比如分词方式有词组、字符等，判断方式也可以只依靠邮件的前几个词。</p>
+P\left( w_{1}^{n} \right) = \prod_{k = 1}^{n}{P\left( w_{k} \middle| w_{k - 1} \right)}</script><h2 id="4-2-实现思路"><a href="#4-2-实现思路" class="headerlink" title="4.2 实现思路"></a>4.2 实现思路</h2><p>采用训练集，分别训练出两个分类spam/ham的模型。对于新的测试邮件，分别通过两个模型得到的概率去预测它，看哪个模型预测得更接近，就将其归为哪一类。此过程可以衍生出很多方法，比如分词方式有词组、字符等，判断方式也可以只依靠邮件的前几个词。</p>
 <p>有人采用了字符为单位的学习方式。这表示对文本进行划分的单元不是单词，而是几个字符，比如将discount分为3个字母一组，这样就算被插入了一些扰乱的字符，比如di<em>scount，在这种分词模式下分成di</em>|sco|oun|t，与discount的大部分小模块还是相同的。</p>
 <h2 id="4-3算法分析"><a href="#4-3算法分析" class="headerlink" title="4.3算法分析"></a>4.3算法分析</h2><h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><p>包含了前N-1个词能提供的全部信息，并且原理简单容易实现。</p>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>首先，这种方法需要大量的训练数据来确定模型的参数。</p>
 <p>还有，因为数据稀疏会导致出现数据平滑问题。比如很多词汇组合的概率为0，这时就需要优化算法。</p>
-<h2 id="2333">
+<h1 id="2333">
     参考文献
-</h2>
+</h1>
+
 
 
 <ol>
