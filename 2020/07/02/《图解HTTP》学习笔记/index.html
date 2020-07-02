@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/corgi.png">
+  <link rel="icon" type="image/png" href="/img/corgi.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>《图解HTTP》学习笔记 - xiaosiyier&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow-night-blue.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>xiaosiyier</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-02 23:34">
+      July 2, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p><a href="https://www.ituring.com.cn/book/1229" target="_blank" rel="noopener">《图解HTTP》</a>的学习笔记…京东购买链接在<a href="https://item.jd.com/11449491.html" target="_blank" rel="noopener">这里</a>。插图都可可爱爱的！</p>
+<p>本人记这篇笔记的逻辑，就是把部分<em>中文</em>翻译成<em>英文</em>改写一下。</p>
+<a id="more"></a>
+<h1 id="HTTP学习笔记"><a href="#HTTP学习笔记" class="headerlink" title="HTTP学习笔记"></a>HTTP学习笔记</h1><ul>
+<li><p>WWW构建技术</p>
+<ul>
+<li><p>文本标记语言：HTML</p>
+</li>
+<li><p>文档传递协议：HTTP</p>
+</li>
+<li><p>指定文档所在地址：URL</p>
+<p>URL是URI的子集。URI：由某个协议方案表示的资源的定位标识符。 </p>
+<p>绝对URI格式：协议方案名://(登录信息@)服务器地址:(服务器端口号)带层次的文件路径?(查询字符串)#(片段标识符)</p>
+</li>
+</ul>
+</li>
+<li><p>TCP/IP的分层管理</p>
+<p>发送端每经过一层增加首部，接收端删除首部。</p>
+<ul>
+<li><p>应用层：决定向用户提供应用服务时通信的活动。</p>
+<ul>
+<li><p>FTP: File Transfer Protocol</p>
+</li>
+<li><p>DNS: Domain Name System</p>
+<p>计算机处理IP地址，而人记忆主机名或域名，DNS可双向查找</p>
+</li>
+<li><p>HTTP: HyperText Transfer Protocol</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+</li>
+<li><p>传输层：提供处于网络连接中两台计算机之间的数据传输</p>
+<ul>
+<li><p>TCP: Transmission Control Protocol</p>
+<ul>
+<li><p>提供字节流服务(Byte Stream Service)，分割大块数据为以报文段为单位的数据包</p>
+</li>
+<li><p>确认数据是否送达到对方</p>
+<p>采用三次握手（数据包上打标志）：发送端SYN(syncronize)-&gt;接收端SYN/ACK(acknowlegement)-&gt;发送端ACK</p>
+</li>
+</ul>
+</li>
+<li><p>UDP: User Data Protocol</p>
+</li>
+</ul>
+</li>
+<li><p>网络层：选择传输路线，传送数据包。</p>
+<ul>
+<li>IP: Internet Protocol 二者可配对<ul>
+<li>IP地址：节点被分配的地址（可变）</li>
+<li>MAC地址：Media Access Control Address网卡所属固定地址（固定）</li>
+<li>ARP协议(Address Resolution Protocol)：解析地址，根据通信方的IP地址反查出对应的MAC地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据链路层：处理连接网络的硬件部分。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p>请求报文：</p>
+<blockquote>
+<p>method request-URI HTTP_version</p>
+<p>(header field)</p>
+<p>CR+LF</p>
+<p>(entity body)</p>
+</blockquote>
+<p>响应报文：</p>
+<blockquote>
+<p>HTTP_version status_code reason-phrase</p>
+<p>(header field)</p>
+<p>CR+LF</p>
+<p>(entity body)</p>
+</blockquote>
+<ul>
+<li><p>stateless(less server burden)</p>
+<ul>
+<li><p>use Cookie to memorize login status</p>
+<p>Server send a <code>Set-Cookie</code> in <code>header field</code>; Client add Cookie in subsequent requests; </p>
+</li>
+</ul>
+</li>
+<li><p>request-URI</p>
+<ul>
+<li>complete format in <code>request-URI</code></li>
+<li>domain name/IP address in <code>header field</code>-&gt;<code>Host:</code></li>
+<li>not intended for specific resource: *</li>
+</ul>
+</li>
+<li><p>method</p>
+<ul>
+<li><p>GET</p>
+</li>
+<li><p>POST</p>
+</li>
+<li><p>PUT: transfer file</p>
+<p>not secure-&gt;if used with REST standard/other verification methods, OK</p>
+</li>
+<li><p>HEAD: similar to GET-&gt;only <code>header field</code></p>
+</li>
+<li><p>DELETE: opposite to PUT</p>
+<p>similar secure requirement</p>
+</li>
+<li><p>OPTIONS: inquire suppor methods of the target URI</p>
+</li>
+<li><p>TRACE: <code>Max-Forwards</code> in <code>header field</code> -&gt; when cut down to 0, server return 200 OK</p>
+<p>often not used. attacked by XST(Cross-Site Tracing)</p>
+</li>
+<li><p>CONNECT: establish tunnel with proxy server</p>
+</li>
+</ul>
+</li>
+<li><p>HTTP Persistent Connections: TCP connect-&gt;HTTP-&gt;HTTP-&gt;…-&gt;HTTP-&gt;TCP disconnect</p>
+<p>enable pipelining: send another request before the former one’s response</p>
+</li>
+<li><p>Encode</p>
+<ul>
+<li><p>内容编码：指明应用在实体内容上的编码格式，保持实体信息原样压缩，客户端接收并负责解码。</p>
+<ul>
+<li><p>gzip(GNU zip)</p>
+</li>
+<li><p>compress(UNIX standard)</p>
+</li>
+<li><p>deflate(zlib)</p>
+</li>
+<li><p>identity</p>
+</li>
+</ul>
+</li>
+<li><p>Chunked Transfer Coding</p>
+</li>
+</ul>
+</li>
+<li><p>Multipart</p>
+<ul>
+<li><p>MIME: Multiple Internet Mail Extensions</p>
+</li>
+<li><p>multipart/form-data</p>
+</li>
+<li><p>multipart/byteranges</p>
+<p>status_code=206 Partial Content</p>
+</li>
+</ul>
+</li>
+<li><p>Range Request(Header field)</p>
+</li>
+<li><p>Content Negotiation : between Client and Server</p>
+<ul>
+<li><p>judge standard:(Header field)</p>
+<ul>
+<li>Accept</li>
+<li>Accept-Charset</li>
+<li>Accept-Encoding</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+</ul>
+</li>
+<li><p>Type</p>
+<ul>
+<li>Server-driven Negotiation</li>
+<li>Agent-driven Negotiation : manual/automatic</li>
+<li>Transparent Negotiation</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Status-code"><a href="#Status-code" class="headerlink" title="Status_code"></a>Status_code</h2><ul>
+<li>1xx Informational</li>
+<li>2xx Success<ul>
+<li>200 OK</li>
+<li>204 No Content : often used when there’s no need for Client to send new messages to Server</li>
+<li>206 Partial Content</li>
+</ul>
+</li>
+<li>3xx Redirection(301-303: change POST into GET and resend request automatically)<ul>
+<li>301 Moved Permanently : new request URI-&gt;change bookmark</li>
+<li>302 Found : new request URI : still flexible</li>
+<li>303 See Other : similar to 302 -&gt; expect Client use GET method</li>
+<li>304 Not Modified : Server allow GET resource, but additional condition not satisfied</li>
+<li>307 Temporary Redirect: similar to 302, but not change POST into GET</li>
+</ul>
+</li>
+<li>4xx Client Error<ul>
+<li>400 Bad Request : grammar error in request</li>
+<li>401 Unauthorized</li>
+<li>403 Forbidden</li>
+<li>404 Not Found</li>
+</ul>
+</li>
+<li>5xx Server Error<ul>
+<li>500 Internal Server Error</li>
+<li>503 Service Unavailable</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="HTTPS-HTTP-SSL"><a href="#HTTPS-HTTP-SSL" class="headerlink" title="HTTPS(HTTP+SSL)"></a>HTTPS(HTTP+SSL)</h2><p>SSL(Secure Socket Layer)|TLS(Transport Layer Security)</p>
+<ul>
+<li><p>加密</p>
+<p>2共享密钥加密 &amp;&amp; 1公开密钥加密（慢）</p>
+<p>证书：</p>
+<ul>
+<li>证明服务器是否规范</li>
+<li>确认对方服务器背后企业是否存在—EV SSL证书</li>
+<li>客户端认证</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><ul>
+<li><p>BASIC认证（采用Base64编码，不够安全）</p>
+</li>
+<li><p>DIGEST认证（摘要认证）</p>
+<p>challenge—response</p>
+</li>
+<li><p>SSL</p>
+</li>
+<li><p><strong>表单认证</strong></p>
+</li>
+</ul>
+<hr>
+<h2 id="Additional"><a href="#Additional" class="headerlink" title="Additional"></a>Additional</h2><ul>
+<li><p>Ajax(Asynchronous JavaScript and XML) : Update partial content</p>
+<ul>
+<li>XMLHttpRequest(API): use Js to commuticate through HTTP</li>
+</ul>
+</li>
+<li><p>Comet: Server Push</p>
+</li>
+<li><p>SPDY:</p>
+<ul>
+<li>HTTP Persistent Connections</li>
+<li>set priorities for requests(multiple)</li>
+<li>compress HTTP header</li>
+<li>server push</li>
+<li>server hint</li>
+</ul>
+</li>
+<li><p>WebSocket</p>
+<ul>
+<li>server push</li>
+<li>reduce content</li>
+</ul>
+</li>
+<li><p>HTTP Speed + Mobility</p>
+</li>
+</ul>
+<hr>
+<h2 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h2><ul>
+<li><p>在客户端篡改请求</p>
+<p>SQL注入攻击 OS命令注入攻击</p>
+</li>
+<li><p>主动攻击\被动攻击</p>
+<p>跨站脚本攻击 跨站点请求伪造</p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/HTTP/">HTTP</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/15/spam-filter-ML/">
+                        <span class="hidden-mobile">spam_filter_ML</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    function loadValine() {
+      addScript('https://cdn.staticfile.org/valine/1.4.14/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "6NFCRJK9cfKQGYbsxcnxxWUI-MdYXbMMI",
+          app_key: "FjI7JJ7aqBqpbjYXPNr9eaDN",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    }
+    createObserver(loadValine, 'vcomments');
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+      powered by Valine.</a></noscript>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"Your Song","artist":"Elton John","url":"/YourSong.mp3","cover":"img/YourSong.jpg"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "《图解HTTP》学习笔记&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
